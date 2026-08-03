@@ -161,6 +161,10 @@
   }
 }
 
+.hero {
+  @apply flex flex-col items-center gap-2 mt-5;
+}
+
 /* import React from 'react'
 
 */

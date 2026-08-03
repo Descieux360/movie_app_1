@@ -5,6 +5,7 @@ import './input.css'
 import Search from './components/Search'
 import Spinner from './components/Spinner'
 import MovieCard from './components/MovieCard'
+import MovieModal from './components/MovieModal.jsx'
 import { updateSearchCount, getTrendingMovies } from './appwrite.js'
 
 const API_BASE_URL = 'https://api.themoviedb.org/3';
@@ -32,6 +33,8 @@ function App() {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
 
   const [trendingMovies, setTrendingMovies] = useState([]);
+
+  const [selectedMovie, setSelectedMovie] = useState(null);
 
   useDebounce(
     () => {
@@ -132,12 +135,17 @@ function App() {
          ) : (
           <ul>
             {movieList.map((movie) => (
-              <MovieCard key={movie.id} movie={movie} />
+              <MovieCard key={movie.id} movie={movie} onClick={() => setSelectedMovie(movie)} />
             ))}
           </ul>
          )
         } 
-      </section>  
+      </section>
+
+      <MovieModal
+        movie={selectedMovie} // Pass the selected movie
+        onClose={() => setSelectedMovie(null)} // Close modal
+      />  
       
     </div>
    </main>
