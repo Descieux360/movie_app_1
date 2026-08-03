@@ -4,7 +4,7 @@ function Search({ searchTerm, setSearchTerm }) {
   return (
     <div className="search">
         <div className="">
-            <img src="../public/search.svg" alt="search icon" />
+            <img src="/search.svg" alt="search icon" />
 
             <input
                 type="text"
