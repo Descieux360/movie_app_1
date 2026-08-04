@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { useDebounce } from 'react-use'
-import heroImg from '../public/hero.png'
 import './input.css'
 import Search from './components/Search'
 import Spinner from './components/Spinner'
@@ -98,17 +97,6 @@ function App() {
     }
   }
 
-  // const loadMoviesSkeleton = async () => {
-  //   try {
-  //     setIsTrendingLoading(true); // Start loading
-  //     const movies = await getTrendingMovies();
-  //     setTrendingMovies(movies || []);
-  //   } catch (error) {
-  //     console.error('Error loading trending movies:', error);
-  //   } finally {
-  //     setIsTrendingLoading(false); // Stop loading
-  //   }
-  // };
 
   useEffect(() => {
      fetchMovies(debouncedSearchTerm);
@@ -123,7 +111,7 @@ function App() {
 
     <div className="wrapper">
       <header>
-        <img src={heroImg} alt="Hero Banner"/>
+        <img src= '/hero.png' alt="Hero Banner"/>
         <h1>Find <span className='text-gradient'>Movies</span> You'll Enjoy
         Without the Hassle</h1>
         <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
@@ -143,13 +131,14 @@ function App() {
                 className="cursor-pointer"
               >
                 <p>{index + 1}</p>
-                <img 
-                  src={movie.poster_url} 
+                <img
+                  src={movie.poster_url === "https://via.placeholder.com/500x750?text=No+Poster" ? '/no-movie.png' : movie.poster_url}
                   alt={movie.title} 
                   className="h-40 w-34 object-cover rounded-md" 
                 />
               </li>
             ))}
+
           </ul>
         </section>
       )}

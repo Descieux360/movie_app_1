@@ -1,16 +1,27 @@
 import React, { useState } from 'react';
 
-const MovieCard = ({ movie, onClick}) => {
-  const { title, vote_average, poster_path, release_date, original_language } = movie;
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [hasError, setHasError] = useState(!poster_path);
+const MovieCard = ({ movie, onClick }) => {
+  const { title, vote_average, poster_path, poster_url, release_date, original_language } = movie;
 
-  const imageUrl = poster_path ? `https://image.tmdb.org/t/p/w500${poster_path}` : null;
+  // Check if poster_url is a placeholder or missing
+  const rawPoster = poster_url || poster_path;
+  const isInvalidPoster = 
+    !rawPoster || 
+    (typeof rawPoster === 'string' && rawPoster.includes('placeholder'));
+
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [hasError, setHasError] = useState(isInvalidPoster);
+
+  // Construct valid TMDB URL or use direct URL if it's already a full link
+  const imageUrl = isInvalidPoster
+    ? null
+    : poster_url 
+      ? poster_url 
+      : `https://image.tmdb.org/t/p/w500${poster_path}`;
 
   return (
-    <div onClick={onClick} className="movie-card flex flex-col rounded-xl bg-dark-100 p-4 shadow-sm">
+    <div onClick={onClick} className="movie-card flex flex-col rounded-xl bg-dark-100 p-4 shadow-sm cursor-pointer glass-card liquid-glow">
       <div className="relative aspect-[2/3] w-full overflow-hidden rounded-lg bg-gray-800">
-        
         
         {!imageLoaded && !hasError && (
           <div className="absolute inset-0 h-full w-full animate-pulse bg-gray-700" />

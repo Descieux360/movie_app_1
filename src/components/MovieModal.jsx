@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { getPosterUrl } from '../utils/getPoster';
 
 const MovieModal = ({ movie, onClose }) => {
   if (!movie) return null;
@@ -22,12 +23,7 @@ const MovieModal = ({ movie, onClose }) => {
   const releaseDate = movie.release_date || '';
   const language = movie.original_language || 'EN';
 
-  // Handles both Appwrite poster_url and TMDB poster_path
-  const posterSrc = movie.poster_url 
-    ? movie.poster_url 
-    : movie.poster_path 
-      ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-      : '/no-movie.jpg';
+const posterSrc = getPosterUrl(movie.poster_path, movie.poster_url);
 
   return (
     <div 
@@ -40,7 +36,7 @@ const MovieModal = ({ movie, onClose }) => {
       >
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/60 text-gray-300 hover:bg-gray-700 hover:text-white"
+          className=" cursor-pointer absolute top-3 right-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/60 text-gray-300 hover:bg-gray-700 hover:text-white"
         >
           ✕
         </button>
@@ -79,7 +75,7 @@ const MovieModal = ({ movie, onClose }) => {
 
           <button
             onClick={onClose}
-            className="mt-4 shrink-0 w-full rounded-lg bg-red-600 py-2.5 text-xs sm:text-sm font-semibold text-white transition-colors hover:bg-red-700"
+            className="cursor-pointer mt-4 shrink-0 w-full rounded-lg bg-red-600 py-2.5 text-xs sm:text-sm font-semibold text-white transition-colors hover:bg-red-700"
           >
             Close Details
           </button>

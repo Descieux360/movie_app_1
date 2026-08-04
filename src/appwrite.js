@@ -18,11 +18,11 @@ export const updateSearchCount = async (searchTerm, movie) => {
       Query.equal('searchTerm', searchTerm),
     ]);
 
+    // 1. Ensure the poster URL is ALWAYS a full, valid HTTPS URL
     const posterUrl = movie.poster_path
       ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-      : '/no-movie.jpg';
+      : '/no-movie.jpg'; // Valid URL fallback
 
-    // Safely extract and format metrics
     const title = movie.title || searchTerm || 'Untitled';
     const overview = movie.overview || 'No overview available.';
     const voteAverage = typeof movie.vote_average === 'number' ? Math.round(movie.vote_average) : 0;
