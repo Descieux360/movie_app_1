@@ -3,7 +3,6 @@ import React, { useEffect } from 'react';
 const MovieModal = ({ movie, onClose }) => {
   if (!movie) return null;
 
-  // Close modal when user presses the Escape key
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') onClose();
@@ -12,20 +11,33 @@ const MovieModal = ({ movie, onClose }) => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
 
-  const { title, vote_average, poster_path, release_date, original_language, overview } = movie;
+ 
+  const title = movie.title || movie.searchTerm || 'Untitled';
+  const overview = movie.overview || 'No overview available for this movie.';
+  
+  const voteAverage = movie.vote_average !== undefined && movie.vote_average !== null 
+    ? Number(movie.vote_average).toFixed(1) 
+    : 'N/A';
+
+  const releaseDate = movie.release_date || '';
+  const language = movie.original_language || 'EN';
+
+  // Handles both Appwrite poster_url and TMDB poster_path
+  const posterSrc = movie.poster_url 
+    ? movie.poster_url 
+    : movie.poster_path 
+      ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+      : '/no-movie.jpg';
 
   return (
-    /* Backdrop - Click outside to close */
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm transition-opacity"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm"
       onClick={onClose}
     >
-      {/* Modal Container - Click inside won't close */}
       <div 
-        className="relative flex w-full max-w-2xl flex-col md:flex-row overflow-hidden rounded-2xl bg-gray-900 border border-gray-800 text-white shadow-2xl"
+        className="relative flex h-auto max-h-[85vh] w-full max-w-2xl flex-col md:flex-row overflow-hidden rounded-2xl bg-gray-900 border border-gray-800 text-white shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close Button */}
         <button
           onClick={onClose}
           className="absolute top-3 right-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/60 text-gray-300 hover:bg-gray-700 hover:text-white"
@@ -34,45 +46,40 @@ const MovieModal = ({ movie, onClose }) => {
         </button>
 
         {/* Poster */}
-        <div className="w-full md:w-1/2 aspect-[2/3] shrink-0 bg-gray-800">
-          <img
-            src={
-              poster_path
-                ? `https://image.tmdb.org/t/p/w500${poster_path}`
-                : '/no-movie.jpg'
-            }
-            alt={title}
-            className="h-full w-full object-cover"
-          />
+        <div className="w-full md:w-1/2 h-48 sm:h-56 md:h-auto md:aspect-[2/3] shrink-0 bg-gray-800">
+          <img src={posterSrc} alt={title} className="h-full w-full object-cover" />
         </div>
 
-        {/* Details Content */}
-        <div className="flex flex-col justify-between p-6 md:w-1/2">
-          <div>
-            <h2 className="text-2xl font-bold text-white mb-2">{title}</h2>
+        {/* Details */}
+        <div className="flex flex-1 flex-col justify-between p-5 md:p-6 min-h-0 overflow-hidden">
+          <div className="flex flex-col min-h-0">
+            <h2 className="text-xl sm:text-2xl font-bold text-white mb-2 pr-6 line-clamp-2">
+              {title}
+            </h2>
             
-            <div className="flex items-center gap-3 text-sm text-gray-400 mb-4">
+            <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-400 mb-3 shrink-0">
               <div className="flex items-center gap-1">
                 <img src="/star.svg" alt="star icon" className="h-4 w-4" />
-                <span className="font-semibold text-white">
-                  {vote_average ? vote_average.toFixed(1) : 'N/A'}
-                </span>
+                <span className="font-semibold text-white">{voteAverage}</span>
               </div>
               <span>•</span>
-              <span className="uppercase">{original_language}</span>
+              <span className="uppercase">{language}</span>
               <span>•</span>
-              <span>{release_date ? release_date.split('-')[0] : 'N/A'}</span>
+              <span>{releaseDate ? releaseDate.split('-')[0] : 'N/A'}</span>
             </div>
 
-            <h4 className="text-sm font-semibold text-gray-300 mb-1">Overview</h4>
-            <p className="text-sm text-gray-400 leading-relaxed max-h-48 overflow-y-auto">
-              {overview || 'No overview available for this movie.'}
-            </p>
+            <h4 className="text-xs sm:text-sm font-semibold text-gray-300 mb-1 shrink-0">
+              Overview
+            </h4>
+
+            <div className="overflow-y-auto text-xs sm:text-sm text-gray-400 leading-relaxed pr-2">
+              <p>{overview}</p>
+            </div>
           </div>
 
           <button
             onClick={onClose}
-            className="mt-6 w-full rounded-lg bg-red-600 py-2.5 font-semibold text-white transition-colors hover:bg-red-700"
+            className="mt-4 shrink-0 w-full rounded-lg bg-red-600 py-2.5 text-xs sm:text-sm font-semibold text-white transition-colors hover:bg-red-700"
           >
             Close Details
           </button>

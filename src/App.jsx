@@ -6,6 +6,7 @@ import Search from './components/Search'
 import Spinner from './components/Spinner'
 import MovieCard from './components/MovieCard'
 import MovieModal from './components/MovieModal.jsx'
+import TrendingSkeleton from './components/TrendingSkeleton.jsx'
 import { updateSearchCount, getTrendingMovies } from './appwrite.js'
 
 const API_BASE_URL = 'https://api.themoviedb.org/3';
@@ -35,6 +36,8 @@ function App() {
   const [trendingMovies, setTrendingMovies] = useState([]);
 
   const [selectedMovie, setSelectedMovie] = useState(null);
+
+  const [isTrendingLoading, setIsTrendingLoading] = useState(true);
 
   useDebounce(
     () => {
@@ -86,11 +89,26 @@ function App() {
   const loadTrendingMovies = async () => {
     try {
       const movies = await getTrendingMovies();
+      setIsTrendingLoading(true);
       setTrendingMovies(movies || []);
     } catch (error) {
       console.error('Error loading trending movies:', error);
+    } finally {
+      setIsTrendingLoading(false); // Stop loading
     }
   }
+
+  // const loadMoviesSkeleton = async () => {
+  //   try {
+  //     setIsTrendingLoading(true); // Start loading
+  //     const movies = await getTrendingMovies();
+  //     setTrendingMovies(movies || []);
+  //   } catch (error) {
+  //     console.error('Error loading trending movies:', error);
+  //   } finally {
+  //     setIsTrendingLoading(false); // Stop loading
+  //   }
+  // };
 
   useEffect(() => {
      fetchMovies(debouncedSearchTerm);
@@ -111,14 +129,25 @@ function App() {
         <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       </header>
 
-      {trendingMovies.length > 0 && (
-        <section className='trending'>
+      {/* Render Skeleton while loading */}
+      {isTrendingLoading ? (
+        <TrendingSkeleton />
+      ) : trendingMovies.length > 0 && (
+        <section className="trending">
           <h2>Trending Movies</h2>
           <ul>
             {trendingMovies.map((movie, index) => (
-              <li key={index}>
+              <li 
+                key={movie.$id || index} 
+                onClick={() => setSelectedMovie(movie)} 
+                className="cursor-pointer"
+              >
                 <p>{index + 1}</p>
-                <img src={movie.poster_url} alt={movie.title} className='h-40 w-34 object-cover rounded-md' />
+                <img 
+                  src={movie.poster_url} 
+                  alt={movie.title} 
+                  className="h-40 w-34 object-cover rounded-md" 
+                />
               </li>
             ))}
           </ul>
