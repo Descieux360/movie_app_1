@@ -4,7 +4,7 @@ A modern React-based movie application with real-time database synchronization a
 
 ## Project Overview
 
-This project is built with **React** and integrates **Appwrite** for backend database management. It provides a seamless interface for browsing and viewing detailed movie information with efficient state management and responsive design.
+This project is built with **React** using **Vite** Bundle and integrates **Appwrite** for backend database management. It provides a seamless interface for browsing and viewing detailed movie information with efficient state management and responsive design.
 
 ---
 
@@ -56,8 +56,9 @@ The application follows a component-based architecture with:
 1. Clone the repository
 2. Install dependencies: `npm install`
 3. Configure Appwrite connection
-4. Start the development server: `npm start`
-5. Open browser to `http://localhost:3000`
+4. add api in your local env.local ; VITE_TMDB_API_KEY, VITE_APPWRITE_PROJECT_ID, VITE_APPWRITE_DATABASE_ID, VITE_APPWRITE_COLLECTION_ID, VITE_APPWRITE_PROJECT_NAME and VITE_APPWRITE_ENDPOINT 
+5. Start the development server: `npm run dev`
+6. Open browser to `http://localhost:5173`
 
 ---
 
